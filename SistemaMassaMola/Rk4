@@ -1,0 +1,56 @@
+import matplotlib.pyplot as plt
+
+def fa(x1):
+    return x1
+
+def fb(k2, m2, z, y):
+    return -(k2/m2)*z + (k2/m2)*y
+
+def fc(x2):
+    return x2
+
+def fd(k2, m1 ,k1, z, y, c, fc):
+    return (k2/m1)*z-(k2/m1 + k1/m1)*y-(c/m1)*fc
+
+def rk4(z, x1, y, x2, h, fa, fb, fc,fd, k1, k2, m1, m2, c):
+    k1fa = fa(x1)
+    k1fb = fb(k2, m2, z, y)
+    k1fc = fc(x2)
+    k1fd = fd(k2, m1, k1, z, y, c, fc(x2))
+
+    k2fa = fa(x1+k1fa*(h/2))
+    k2fb = fb(k2, m2, z+k1fb*(h/2), y + k1fb*(h/2))
+    k2fc = fc(x2 + (h/2)*k1fc)
+    k2fd = fd(k2, m1, k1, z + (h/2)*k1fd, y + (h/2)*k1fd, c, fc(x2))
+
+    k3fa = fa(x1+(h/2)*k2fa)
+    k3fb = fb(k2, m2, z + (h/2)*k2fb, y + (h/2)*k2fb)
+    k3fc = fc(x2 + (h/2) * k2fc)
+    k3fd = fd(k2, m1, k1, z + (h/2)*k2fd, y + (h/2)*k2fd, c , fc(x2) )
+
+    k4fa = fa(x1 + h * k3fa)
+    k4fb = fb(k2, m2, z + h * k3fb, y + h * k3fb)
+    k4fc = fc(x2 + h * k3fc)
+    k4fd = fd(k2, m1, k1,z+h*k3fd, y + h*k3fd, c, fc(x2))
+
+    x1 = x1 + (k1fa + 2*(k2fa + k3fa) + k4fa)/6
+    z = z + (k1fb + 2 * (k2fb + k3fb) + k4fb)/6
+    x2 = x2 + (k1fc + 2 * (k2fc + k3fc) + k4fc)/6
+    y = y + (k1fd + 2 * (k2fd + k3fd) + k4fd)/6
+
+    return x1, z, x2, y
+
+if __name__ =='__main__':
+    x1 = 0.6
+    z = 2
+    x2 = 0.5
+    y = 1
+    pontos = []
+
+    for i in range(8):
+        x1, z, x2, y = rk4(z, x1, y, x2, 2, fa, fb, fc, fd, 2, 2, 2, 2, 2)
+        # plt.plot([x1, z, x2, y])
+        pontos.append([x1, z, x2, y])
+
+    plt.plot(pontos[0],pontos[1],pontos[2],pontos[3],pontos[4],pontos[5],pontos[6],pontos[7])
+    plt.show()
