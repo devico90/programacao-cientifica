@@ -3,54 +3,82 @@ import matplotlib.pyplot as plt
 def fa(x1):
     return x1
 
-def fb(k2, m2, z, y):
-    return -(k2/m2)*z + (k2/m2)*y
+def fb(k1, k2, m1, z,d, y, c, fa):
+    return -(k2/m1)*(z-d) - (k1/m1)*y - (c/m1)*fa
 
 def fc(x2):
     return x2
 
-def fd(k2, m1 ,k1, z, y, c, fc):
-    return (k2/m1)*z-(k2/m1 + k1/m1)*y-(c/m1)*fc
+def fd(k2, m2, z, d):
+    return (k2/m2)*(z-d)
 
-def rk4(z, x1, y, x2, h, fa, fb, fc,fd, k1, k2, m1, m2, c):
+def rk4(z, x1, y,d, x2, h, fa, fb, fc,fd, k1, k2, m1, m2, c):
+
     k1fa = fa(x1)
-    k1fb = fb(k2, m2, z, y)
+    k1fb = fb(k1, k2, m1, z, d, y, c, fa(x1))
     k1fc = fc(x2)
-    k1fd = fd(k2, m1, k1, z, y, c, fc(x2))
+    k1fd = fd(k2, m2, z, d)
 
     k2fa = fa(x1+k1fa*(h/2))
-    k2fb = fb(k2, m2, z+k1fb*(h/2), y + k1fb*(h/2))
+    k2fb = fb(k2, k1, m1, z+k1fb*(h/2), d+k1fb*(h/2), y + k1fb*(h/2), c, fa(x1))
     k2fc = fc(x2 + (h/2)*k1fc)
-    k2fd = fd(k2, m1, k1, z + (h/2)*k1fd, y + (h/2)*k1fd, c, fc(x2))
+    k2fd = fd(k2, m2, z + (h/2)*k1fd, d + (h/2)*k1fd)
 
     k3fa = fa(x1+(h/2)*k2fa)
-    k3fb = fb(k2, m2, z + (h/2)*k2fb, y + (h/2)*k2fb)
+    k3fb = fb(k2, k1, m1, z+k2fb*(h/2), d+k2fb*(h/2), y + k2fb*(h/2), c, fa(x1))
     k3fc = fc(x2 + (h/2) * k2fc)
-    k3fd = fd(k2, m1, k1, z + (h/2)*k2fd, y + (h/2)*k2fd, c , fc(x2) )
+    k3fd = fd(k2, m2, z + (h/2)*k2fd, d + (h/2)*k2fd)
 
     k4fa = fa(x1 + h * k3fa)
-    k4fb = fb(k2, m2, z + h * k3fb, y + h * k3fb)
+    k4fb = fb(k2, k1, m1, z+k3fb*h, d+k3fb*h, y + k3fb*h, c, fa(x1))
     k4fc = fc(x2 + h * k3fc)
-    k4fd = fd(k2, m1, k1,z+h*k3fd, y + h*k3fd, c, fc(x2))
+    k4fd = fd(k2, m2, z + h*k3fd, d + h*k3fd)
 
     x1 = x1 + (k1fa + 2*(k2fa + k3fa) + k4fa)/6
-    z = z + (k1fb + 2 * (k2fb + k3fb) + k4fb)/6
+    z = (z + (k1fb + 2 * (k2fb + k3fb) + k4fb)/6) + d
     x2 = x2 + (k1fc + 2 * (k2fc + k3fc) + k4fc)/6
     y = y + (k1fd + 2 * (k2fd + k3fd) + k4fd)/6
 
     return x1, z, x2, y
 
 if __name__ =='__main__':
-    x1 = 0.6
-    z = 2
-    x2 = 0.5
+
+    x1 = 1
     y = 1
-    pontos = []
+    x2 = -1
+    z = 2
+    d= 1.5
+    h =1
+    k1 = 0.2
+    k2 = 0.5
+    m1 = 2
+    m2 = 2
+    c = 0.2
 
-    for i in range(8):
-        x1, z, x2, y = rk4(z, x1, y, x2, 2, fa, fb, fc, fd, 2, 2, 2, 2, 2)
-        # plt.plot([x1, z, x2, y])
-        pontos.append([x1, z, x2, y])
+    velocidadeM1 = []
+    posicaoM1 = []
 
-    plt.plot(pontos[0],pontos[1],pontos[2],pontos[3],pontos[4],pontos[5],pontos[6],pontos[7])
+    velocidadeM2 = []
+    posicaoM2 = []
+
+    tempo = []
+
+    for i in range(300):
+        tempo.append(i)
+        velocidadeM1.append(x1)
+        velocidadeM2.append(x2)
+        posicaoM1.append(y)
+        posicaoM2.append(z)
+        x1, z, x2, y = rk4(z, x1, y, d, x2, h, fa, fb, fc, fd, k1, k2, m1, m2, c)
+
+    plt.plot(posicaoM1, 'b')
+    plt.plot(tempo,velocidadeM1, 'r')
+    plt.plot(tempo,posicaoM2, 'r')
+    plt.plot(tempo,velocidadeM2, 'r')
+    print "instante de tempo: {}".format(tempo)
+    print  "posicao m1: {}".format(posicaoM1)
+    print  "velocidade m1: {}".format(velocidadeM1)
+    print  "posicao m2: {}".format(posicaoM2)
+    print  "velocidade m2: {}".format(velocidadeM2)
+     # plt.plot(posicaoM2, velocidadeM2, 'g')
     plt.show()
