@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 """
-definiçao das funções do problema
+definicao das funcoes do problema
 """
 
 #funcao que define a velocidade da massa 1
@@ -21,16 +21,16 @@ def fd(k2, m2, z, d):
     return -(k2/m2)*(z-d)
 
 
-# heun ou rk2 usado para fazer a inicialização do problema
+# heun ou rk2 usado para fazer a inicializacao do problema
 def heun(z, x1, y,d, x2, h, fa, fb, fc,fd, k1, k2, m1, m2, c):
 
-    # calcula os valores de k1 para cada uma das funções
+    # calcula os valores de k1 para cada uma das funcoes
     k1fa = fa(x1)
     k1fb = fb(k1, k2, m1, z, d, y, c, fa(x1))
     k1fc = fc(x2)
     k1fd = fd(k2, m2, z, d)
 
-    # calcula os valores de k2 para cada uma das funções
+    # calcula os valores de k2 para cada uma das funcoes
     k2fa = fa(x1 + k1fa * h)
     k2fb = fb(k2, k1, m1, z + k1fb * h , d , y + k1fb * h , c, fa(x1))
     k2fc = fc(x2 + h  * k1fc)
@@ -63,7 +63,7 @@ def preditorCorretor(x1atual, x1anterior, zatual, zanterior, x2atual, x2anterior
 
 if __name__ =='__main__':
 
-    # inicialização com valores iniciais
+    # inicializacao com valores iniciais
     x1 = 1      #velocidade de m1
     y = 1       #posicao de m1
     x2 = -1     #velocidade de m2
