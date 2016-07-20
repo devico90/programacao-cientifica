@@ -4,57 +4,64 @@ def fa(x1):
     return x1
 
 def fb(k1, k2, m1, z,d, y, c, fa):
-    return -(k2/m1)*(z-d) - (k1/m1)*y - (c/m1)*fa
+    return (k2/m1)*(z-d) - (k1/m1)*y - (c/m1)*fa
 
 def fc(x2):
     return x2
 
 def fd(k2, m2, z, d):
-    return (k2/m2)*(z-d)
+    return -(k2/m2)*(z-d)
 
 def rk4(z, x1, y,d, x2, h, fa, fb, fc,fd, k1, k2, m1, m2, c):
 
+    # calcula os valores de k1 para cada uma das funções
     k1fa = fa(x1)
     k1fb = fb(k1, k2, m1, z, d, y, c, fa(x1))
     k1fc = fc(x2)
     k1fd = fd(k2, m2, z, d)
 
+    # calcula os valores de k2 para cada uma das funções
     k2fa = fa(x1+k1fa*(h/2))
-    k2fb = fb(k2, k1, m1, z+k1fb*(h/2), d+k1fb*(h/2), y + k1fb*(h/2), c, fa(x1))
+    k2fb = fb(k2, k1, m1, z+k1fb*(h/2), d, y + k1fb*(h/2), c, fa(x1))
     k2fc = fc(x2 + (h/2)*k1fc)
-    k2fd = fd(k2, m2, z + (h/2)*k1fd, d + (h/2)*k1fd)
+    k2fd = fd(k2, m2, z + (h/2)*k1fd, d )
 
+    # calcula os valores de k3 para cada uma das funções
     k3fa = fa(x1+(h/2)*k2fa)
-    k3fb = fb(k2, k1, m1, z+k2fb*(h/2), d+k2fb*(h/2), y + k2fb*(h/2), c, fa(x1))
+    k3fb = fb(k2, k1, m1, z+k2fb*(h/2), d, y + k2fb*(h/2), c, fa(x1))
     k3fc = fc(x2 + (h/2) * k2fc)
-    k3fd = fd(k2, m2, z + (h/2)*k2fd, d + (h/2)*k2fd)
+    k3fd = fd(k2, m2, z + (h/2)*k2fd, d)
 
+    # calcula os valores de k4 para cada uma das funções
     k4fa = fa(x1 + h * k3fa)
-    k4fb = fb(k2, k1, m1, z+k3fb*h, d+k3fb*h, y + k3fb*h, c, fa(x1))
+    k4fb = fb(k2, k1, m1, z+k3fb*h, d, y + k3fb*h, c, fa(x1))
     k4fc = fc(x2 + h * k3fc)
-    k4fd = fd(k2, m2, z + h*k3fd, d + h*k3fd)
+    k4fd = fd(k2, m2, z + h*k3fd, d)
 
-    x1 = x1 + (k1fa + 2*(k2fa + k3fa) + k4fa)/6
-    z = (z + (k1fb + 2 * (k2fb + k3fb) + k4fb)/6) + d
-    x2 = x2 + (k1fc + 2 * (k2fc + k3fc) + k4fc)/6
-    y = y + (k1fd + 2 * (k2fd + k3fd) + k4fd)/6
+    # calcula os novos valores para o vetor [x1 z x2 y]
+    x1 = x1 + (k1fa + 2*(k2fa + k3fa) + k4fa) * h/6
+    z = (z + (k1fb + 2 * (k2fb + k3fb) + k4fb) * h/6) + d
+    x2 = x2 + (k1fc + 2 * (k2fc + k3fc) + k4fc) * h/6
+    y = y + (k1fd + 2 * (k2fd + k3fd) + k4fd) * h/6
 
     return x1, z, x2, y
 
 if __name__ =='__main__':
 
-    x1 = 1
-    y = 1
-    x2 = -1
-    z = 2
-    d= 1.5
-    h =1
-    k1 = 0.2
-    k2 = 0.5
-    m1 = 2
-    m2 = 2
-    c = 0.2
+    # inicialização com valores iniciais
+    x1 = 1      #velocidade de m1
+    y = 1       #posicao de m1
+    x2 = -1     #velocidade de m2
+    z = 2       #posicao de m2
+    d = 1.5     #posicao de m2 na qual a mola esta em repouso
+    h = 1
+    k1 = 0.2    #constante elastica da mola 1
+    k2 = 0.5    #constante elastica da mola 2
+    m1 = 2      #massa m1
+    m2 = 2      #massa m2
+    c = 0.2     #constante de proporcionalidade do atrito
 
+    #vetores para guardar os valores obtdos para serem usandos mais tarde no grafico
     velocidadeM1 = []
     posicaoM1 = []
 
@@ -72,10 +79,10 @@ if __name__ =='__main__':
         x1, z, x2, y = rk4(z, x1, y, d, x2, h, fa, fb, fc, fd, k1, k2, m1, m2, c)
 
     plt.plot(posicaoM1, 'b')
-    plt.plot(tempo,velocidadeM1, 'r')
+    plt.plot(tempo,velocidadeM1, 'g')
     plt.plot(tempo,posicaoM2, 'r')
-    plt.plot(tempo,velocidadeM2, 'r')
-    print "instante de tempo: {}".format(tempo)
+    plt.plot(tempo,velocidadeM2, 'y')
+    print "instante de tempo: %s".format(tempo)
     print  "posicao m1: {}".format(posicaoM1)
     print  "velocidade m1: {}".format(velocidadeM1)
     print  "posicao m2: {}".format(posicaoM2)
