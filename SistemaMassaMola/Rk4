@@ -50,9 +50,9 @@ if __name__ =='__main__':
 
     # inicializacao com valores iniciais
     x1 = 1      #velocidade de m1
-    y = 1       #posicao de m1
+    y = 1       #posicao de m2
     x2 = -1     #velocidade de m2
-    z = 2       #posicao de m2
+    z = 2       #posicao de m1
     d = 1.5     #posicao de m2 na qual a mola esta em repouso
     h = 1
     k1 = 0.2    #constante elastica da mola 1
@@ -70,12 +70,12 @@ if __name__ =='__main__':
 
     tempo = []
 
-    for i in range(300):
+    for i in range(20):
         tempo.append(i)
         velocidadeM1.append(x1)
         velocidadeM2.append(x2)
-        posicaoM1.append(y)
-        posicaoM2.append(z)
+        posicaoM2.append(y)
+        posicaoM1.append(z)
         x1, z, x2, y = rk4(z, x1, y, d, x2, h, fa, fb, fc, fd, k1, k2, m1, m2, c)
 
     plt.plot(posicaoM1, 'b')

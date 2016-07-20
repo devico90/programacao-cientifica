@@ -65,9 +65,9 @@ if __name__ =='__main__':
 
     # inicializacao com valores iniciais
     x1 = 1      #velocidade de m1
-    y = 1       #posicao de m1
+    y = 1       #posicao de m2
     x2 = -1     #velocidade de m2
-    z = 2       #posicao de m2
+    z = 2       #posicao de m1
     d = 1.5     #posicao de m2 na qual a mola esta em repouso
     h = 1
     k1 = 0.2    #constante elastica da mola 1
@@ -86,8 +86,8 @@ if __name__ =='__main__':
     #inicializa os vetores com os valores inicias
     velocidadeM1.append(x1)
     velocidadeM2.append(x2)
-    posicaoM1.append(y)
-    posicaoM2.append(z)
+    posicaoM1.append(z)
+    posicaoM2.append(y)
 
     #calcula os novos valores para o vetor [x1 z x2 y] a serem utilizados para inicializar a previsao-correcao
     x1atual, zatual, x2atual, yatual = heun(z, x1, y, d, x2, h, fa, fb, fc, fd, k1, k2, m1, m2, c)
@@ -95,18 +95,18 @@ if __name__ =='__main__':
     #armazena os novos valores encontrados
     velocidadeM1.append(x1atual)
     velocidadeM2.append(x2atual)
-    posicaoM1.append(yatual)
-    posicaoM2.append(zatual)
+    posicaoM2.append(yatual)
+    posicaoM1.append(zatual)
 
-    for i in range(300):
+    for i in range(19):
         # calcula os novos valores para o vetor [x1 z x2 y]
         x1novo, znovo, x2novo, ynovo = preditorCorretor(x1atual, x1, zatual, z, x2atual, x2, yatual, y, h)
 
         # armazena os novos valores encontrados
         velocidadeM1.append(x1novo)
         velocidadeM2.append(x2novo)
-        posicaoM1.append(ynovo)
-        posicaoM2.append(znovo)
+        posicaoM2.append(ynovo)
+        posicaoM1.append(znovo)
 
         #anda com os valores para serem utilizados na proxima iteracao
         x1 = x1atual
